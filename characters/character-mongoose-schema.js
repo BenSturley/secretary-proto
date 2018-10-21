@@ -9,7 +9,8 @@ const createSchema = function() {
         notes:          [String],
         created:        Date,
         lastModified:   Date,
-        _id:            mongoose.Schema.Types.ObjectId
+        // _id:            mongoose.Schema.Types.ObjectId
+        _id:            String
     });
 };
 

@@ -57,6 +57,9 @@ const test_runner = context => {
         _id:            mongoose.Schema.Types.ObjectId
     });
 
+    // store ref to schema for model
+    const characterSchema = schema;
+
     context.messenger.message('- Comparing schemas... -');
     
     context.messenger.message(schema);
@@ -164,6 +167,64 @@ const test_runner = context => {
         // m.save(callback);
     }
 
+    //
+    // model tests
+    context.messenger.message("-- Running model tests... --");
+
+    const characterModel = mongoose.model('Character', characterSchema);
+    context.messenger.message('characterModel:');
+    context.messenger.message(characterModel);
+    
+    context.messenger.message('Creating object from model, ');
+    context.messenger.message(' with new ObjectId()...');
+    const characterGenevieve = new characterModel({
+        names:          char.getNames(),
+        notes:          char.getNotes(),
+        created:        char.created,
+        lastModified:   char.lastModified,
+        _id:            new mongoose.Types.ObjectId()
+    });
+
+    context.messenger.message('Creating object from model, ');
+    context.messenger.message(' with id from object...');
+    const charBen = new Character({
+        names:  ['Ben', 'Sturley'],
+        notes:  ['A note about Benja.'], 
+    });
+    charBen.assignNewId();
+    const characterBen = new characterModel({
+        names:          charBen.getNames(),
+        notes:          charBen.getNotes(),
+        created:        charBen.created,
+        lastModified:   charBen.lastModified,
+        _id:            charBen._id
+    });
+
+    context.messenger.message('Saving model 1...');
+    characterGenevieve.save()
+        .then(
+            () => {
+                context.messenger.message(`Model 1 saved.`);
+            },
+            err => {
+                context.messenger.error(`Error saving model 1: ${err}`);
+            }
+        );
+    
+    context.messenger.message('Saving model 2...');
+    characterBen.save()
+        .then(
+            function() {
+                context.messenger.message(`Model 2 saved.`);
+            }, 
+            function(err) {
+                context.messenger.error(`Model 2 save error: ${err}`);
+            }
+        );
+    
+
+    //
+    // all done
     context.messenger.message('--- Mongoose tests completed ---');
     context.isComplete = true;
 };
