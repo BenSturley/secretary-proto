@@ -36,7 +36,7 @@ const test_runner = async context => {
     //         }
     //     );
     }
-    
+
     context.messenger.message('-- Running connect tests... --');
     try {
         await mongoose.connect(uri, { useNewUrlParser: true });
@@ -248,8 +248,8 @@ const test_runner = async context => {
     catch (err) {
         context.messenger.error(`Model 2 save error: ${err}`);    
     }
-        
-        // model find tests
+    
+    // model find tests
     context.messenger.message('Finding all characters...');
 
     const findModel = characterModel;
@@ -277,9 +277,38 @@ const test_runner = async context => {
         context.messenger.error(`Error executing find: ${err}`);
     }
 
-    if (results && results.length > 0) {
-        context.messenger.message(`Object[0]: ${results[0]}`);
-    }
+    if (results) {
+        if (results.length > 0) {
+            context.messenger.message(`Object[0]: ${results[0]}`);
+        }
+
+        // delete excess(ive) records
+        if (results.length > 10) {
+            context.messenger.message(`Excessive record count: ${results.length + 1}; trimming...`);
+
+            // delete tests
+            context.messenger.message('-- Running delete tests... --');
+
+            // create list of IDs to delete (all but last 10 returned)
+            const deletionIds = [];
+            for (let i = 0; i < (results.length); i++) {
+                const objId = results[i]._id;
+                deletionIds.push(objId);
+            }
+            context.messenger.message(`Deleting ids: ${deletionIds}`);
+            
+            const deleteModel = characterModel;
+            const deleteQuery = deleteModel.find( { _id: { $in: deletionIds } } );
+            try {
+                context.messenger.message('Executing delete...');
+                //await deleteQuery.remove().exec();   // .remove() is DEPRECATED
+                await deleteQuery.deleteMany().exec();
+            }
+            catch (err) {
+                context.messenger.error(`Error deleting objects: ${err}`);
+            }
+        }
+    } 
 
 
     // disconnect 
