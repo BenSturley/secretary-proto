@@ -1,7 +1,7 @@
 //
 // test_mongoose.js
 //
-const test_runner = context => {
+const test_runner = async context => {
 
     context.currentTest = 'Mongoose';
     context.isStarted = true;
@@ -12,24 +12,40 @@ const test_runner = context => {
 
     //
     // connect tests
+
+    {
+    // context.messenger.message('-- Running connect tests... --');
+    // mongoose.connect(uri, { useNewUrlParser: true } )
+    //     .then(
+    //         () => { 
+    //             context.messenger.message('Connected to database successfully.');
+    //         }
+    //         , err => { 
+    //             context.messenger.error(`Error connecting to database: ${err.message}`); 
+    //         }
+    //     )
+    //     // .then(
+    //     //     () => {
+    //     //         mongoose.connection.close();
+    //     //         context.messenger.message('Disconnected from database.'); 
+    //     //     }
+    //     // )
+    //     .catch(
+    //         ex => {
+    //             context.messenger.error(`Error: ${ex.message}`); 
+    //         }
+    //     );
+    }
+    
     context.messenger.message('-- Running connect tests... --');
-    mongoose.connect(uri, { useNewUrlParser: true } ).then(
-        () => { 
-            context.messenger.message('Connected to database successfully.');
-        }
-        , err => { 
-            context.messenger.error(`Error connecting to database: ${err.message}`); 
-        }
-    ).then(
-        () => {
-            mongoose.connection.close();
-            context.messenger.message('Disconnected from database.'); 
-        }
-    ).catch(
-        ex => {
-            context.messenger.error(`Error: ${ex.message}`); 
-        }
-    );
+    try {
+        await mongoose.connect(uri, { useNewUrlParser: true });
+        context.messenger.message('Connected to database successfully.');
+    }
+    catch (err) {
+        context.messenger.error(`Error connecting to database: ${err.message}`); 
+    }
+
 
     //
     // schema tests
@@ -200,28 +216,82 @@ const test_runner = context => {
         _id:            charBen._id
     });
 
-    context.messenger.message('Saving model 1...');
-    characterGenevieve.save()
-        .then(
-            () => {
-                context.messenger.message(`Model 1 saved.`);
-            },
-            err => {
-                context.messenger.error(`Error saving model 1: ${err}`);
-            }
-        );
+    // model save tests
+
+    {
+    // context.messenger.message('Saving model 1...');
+    // characterGenevieve.save()
+    //     .then(
+    //         () => {
+    //             context.messenger.message(`Model 1 saved.`);
+    //         },
+    //         err => {
+    //             context.messenger.error(`Error saving model 1: ${err}`);
+    //         }
+    //     );
+    }
     
-    context.messenger.message('Saving model 2...');
-    characterBen.save()
-        .then(
-            function() {
-                context.messenger.message(`Model 2 saved.`);
-            }, 
-            function(err) {
-                context.messenger.error(`Model 2 save error: ${err}`);
-            }
-        );
-    
+    // context.messenger.message('Saving model 1...');
+    try {
+        await characterGenevieve.save();
+        context.messenger.message('Model 1 saved.');
+    }
+    catch (err) {
+        context.messenger.error(`Error saving model 1: ${err}`);
+    }
+
+    // context.messenger.message('Saving model 2...');
+    try {
+        await characterBen.save();
+        context.messenger.message(`Model 2 saved.`);
+    }
+    catch (err) {
+        context.messenger.error(`Model 2 save error: ${err}`);    
+    }
+        
+        // model find tests
+    context.messenger.message('Finding all characters...');
+
+    const findModel = characterModel;
+    const findQuery = findModel.find();
+    findQuery.select("_id names notes created lastModified");
+    // findQuery.limit(10);
+    findQuery.sort({ 'names.0': 'desc' });
+    {// findQuery.exec()
+    //     .then(
+    //         recs => {
+    //             context.messenger.message(`Objects found: ${recs.length}`);
+    //         },
+    //         err => {
+    //             context.messenger.error(`Error executing find: ${err}`);
+    //         }
+    //     );
+    }
+
+    let results;
+    try {
+        results = await findQuery.exec();
+        context.messenger.message(`Objects found: ${results.length}`);
+    }
+    catch (err) {
+        context.messenger.error(`Error executing find: ${err}`);
+    }
+
+    if (results && results.length > 0) {
+        context.messenger.message(`Object[0]: ${results[0]}`);
+    }
+
+
+    // disconnect 
+    //  (must do this or the program doesn't terminate, for some reason)
+    try {
+        mongoose.connection.close();
+        context.messenger.message('Disconnected from database.'); 
+    }
+    catch (err) {
+        context.messenger.error(`Error disconnecting: ${err}`);
+    }
+
 
     //
     // all done
