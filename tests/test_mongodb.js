@@ -67,7 +67,7 @@ const testFn2 = async function() {
             op = 'Dropping collection...';
             console.log(op);
             output += op + '\n';
-            let b = await col.drop();
+            await col.drop();
             
             op = 'Closing database...';
             console.log(op);
