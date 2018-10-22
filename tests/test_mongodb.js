@@ -1,31 +1,38 @@
 //
 // test_mongodb.js
 //
-const testFn1 = function() {
+
+{
+// const testFnOld = function() {
+
+//     const mongo = require('mongodb');
+//     const MongoClient = mongo.MongoClient;
+//     const url = 'mongodb://localhost:27017/testdb';
+
+//     MongoClient.connect(url, (err, db) => {
+//         if (err) {
+//             throw err;
+//         }
+//         console.log('Database created, apparently.');
+//         db.close();
+//     });
+
+// };
+}
+
+const testFn = async function(context) {
 
     const mongo = require('mongodb');
     const MongoClient = mongo.MongoClient;
-    const url = 'mongodb://localhost:27017/testdb';
-
-    MongoClient.connect(url, (err, db) => {
-        if (err) {
-            throw err;
-        }
-        console.log('Database created, apparently.');
-        db.close();
-    });
-
-};
-
-const testFn2 = async function() {
-
-    const mongo = require('mongodb');
-    const MongoClient = mongo.MongoClient;
-    const url = 'mongodb://localhost:27017/';
-    const dbName = 'testdb';
+    const url = context.config.database_baseuri; //'mongodb://localhost:27017/';
+    const dbName = context.config.database_name; //'testdb';
     const collName = 'characters';
     const character = require('../characters/character');
     const obj = new character({names: ['Ben', 'Sturley']});
+
+    context.currentTest = 'MongoDB Tests';
+    context.isStarted = true;
+    context.messenger.message('--- Starting MongoDB tests ---');
 
     let output = '';
 
@@ -94,7 +101,7 @@ const testFn2 = async function() {
 
 module.exports = {
     test_name:  'Test MongoDB',
-    run_test:   testFn2,
+    run_test:   testFn,
     disabled:   false, 
     async:      true
 }

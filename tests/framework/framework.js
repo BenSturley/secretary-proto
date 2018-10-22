@@ -2,13 +2,15 @@
 // framework.js
 //
 const events = require('events');
+const config = require('./config');
 
 class TestContext {
     constructor() {
-        this._messenger = new Messenger();
-        this._currentTest = '(none)';
-        this._isStarted = false;
-        this._isComplete = false;
+        this._messenger     = new Messenger();
+        this._currentTest   = '(none)';
+        this._isStarted     = false;
+        this._isComplete    = false;
+        this._config        = config;
     }
 
     get messenger() {
@@ -19,6 +21,10 @@ class TestContext {
         this._currentTest = '(none)';
         this._isComplete = false;
         this._isStarted = false;
+    }
+
+    get config() {
+        return this._config;
     }
 
     get currentTest() {
@@ -45,7 +51,7 @@ class TestContext {
     toString() {
         return `[TestContext: `
                + ` currentTest: ${this._currentTest}`
-               + `, isStarted: ${this._isStarted}`
+               + `, isStarted:  ${this._isStarted}`
                + `, isComplete: ${this._isComplete}`
                + ` ]`;
     }

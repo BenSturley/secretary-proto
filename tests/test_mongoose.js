@@ -8,7 +8,7 @@ const test_runner = async context => {
     context.messenger.message('--- Starting Mongoose tests ---');
 
     const mongoose = require('mongoose');
-    const uri = 'mongodb://localhost:27017/testdb';
+    const uri = context.config.database_uri;
 
     //
     // connect tests
@@ -313,6 +313,9 @@ const test_runner = async context => {
 
     // disconnect 
     //  (must do this or the program doesn't terminate, for some reason)
+    //
+    //  todo: move this out to common data access framework
+    //
     try {
         mongoose.connection.close();
         context.messenger.message('Disconnected from database.'); 
@@ -326,9 +329,12 @@ const test_runner = async context => {
     // all done
     context.messenger.message('--- Mongoose tests completed ---');
     context.isComplete = true;
+
 };
 
 module.exports = {
     test_name:  'Test Mongoose',
-    run_test:   test_runner
+    run_test:   test_runner,
+    disabled:   false,
+    async:      true
 }

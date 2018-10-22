@@ -1,13 +1,16 @@
 //
 // all_tests.js
 //
-const tests_runner = () => {
+const tests_runner = async () => {
 
-    // scan directory
+    //
+    // scan directory and build array of relative
+    // test file name paths for require()-ing
     const fs = require('fs');
     const filePaths = fs.readdirSync(__dirname);
     const testFilePaths = [];
     filePaths.forEach(fp => {
+        // check file is a .js, doesn't begin with '_', and isn't _this_ file
         const fpl = fp.toLowerCase();
         if (
             fpl.endsWith('.js')
@@ -15,10 +18,10 @@ const tests_runner = () => {
             && !(fpl.startsWith('_')) ) {
                 testFilePaths.push(`./${fp}`);
             }
-
     });
 
-    // create context
+    //
+    // create context object to be passed to each test
     const framework = require('./framework');
     const context = new framework.TestContext();
     const messenger = context.messenger;
@@ -30,22 +33,37 @@ const tests_runner = () => {
             console.error(err);
         }); // emitter.on('error', err => {
 
+    //
     // start tests
     console.log('-- Starting tests --');
     
+    // iterate our test file paths, grab a reference using require(), and
+    // execute each one
+    // assumes each test implements the run_test() method
     for (let i = 0; i < testFilePaths.length; i++) {
         const path = testFilePaths[i];
         //console.log(path);
-        if (path.toLowerCase().indexOf('mongoose') > -1 
-         || path.toLowerCase().indexOf('character') > -1 
+        if (path.toLowerCase().indexOf('xmongoose') > -1 
+         || path.toLowerCase().indexOf('crud') > -1 
             ) {
             const test = require(path);
             context.reset();
-            test.run_test(context);
+            if (test.async) {
+                //(async () => {
+                    console.log(' * running async test * ');
+                    await test.run_test(context);
+                    console.log(' * finished async test * ');
+                //})();
+            }
+            else {
+                test.run_test(context);
+            }
         }
     } // for (let i = 0; i < testFilePaths.length; i++) {
     console.log('-- Tests completed --');
 
+    //
+    // return the context object....?
     return 'context: ' + context;
 }
 
