@@ -36,6 +36,16 @@ class Character extends persistentObject {
         const loaded = new character(id);
         return loaded;
     }
+
+    static getMongooseModel() {
+        const schema = require('./character-mongoose-schema').schema;
+        const mongoose = require('mongoose');
+        
+
+
+
+
+0    }
 }
 
 module.exports = Character;

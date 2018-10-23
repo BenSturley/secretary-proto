@@ -21,6 +21,29 @@ const test_runner = async function(context) {
     catch (err) {
         context.messenger.error(`Error connecting to database: ${err.message}`); 
     }
+
+    //
+    // begin the CRUD!!
+    //
+    // operations: 
+    //  - create a schema, model and object
+    //  - save it
+    //  - find that object and read it into JS object
+    //  - update JS object and update database
+    //  - find the object again and delete it
+    //  
+
+    //
+    // create schema and model
+    const characterSchema = require('../characters/character-mongoose-schema').schema;
+    const characterModel = mongoose.model("Character", characterSchema);
+    
+    
+
+
+    //
+    // CRUD hereby ends
+    //
     
 
     // disconnect 

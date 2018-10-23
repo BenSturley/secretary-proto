@@ -278,24 +278,44 @@ const test_runner = async context => {
     }
 
     if (results) {
-        if (results.length > 0) {
+        const resultsLen = results.length;
+        if ( resultsLen > 0 ) {
             context.messenger.message(`Object[0]: ${results[0]}`);
+            context.messenger.message(`Object[${resultsLen-1}]: ${results[resultsLen-1]}`);
         }
 
         // delete excess(ive) records
-        if (results.length > 10) {
-            context.messenger.message(`Excessive record count: ${results.length + 1}; trimming...`);
+        const resultsLimit = 12;
+        if ( resultsLen > resultsLimit ) {
+            context.messenger.message(`Excessive record count: ${resultsLen}; trimming...`);
 
             // delete tests
             context.messenger.message('-- Running delete tests... --');
 
             // create list of IDs to delete (all but last 10 returned)
             const deletionIds = [];
-            for (let i = 0; i < (results.length); i++) {
-                const objId = results[i]._id;
+            for (let i = 0; i < resultsLimit+1; i++) {
+                // const objId = results[i]._id;
+                // deletionIds.push(objId);
+
+                let deleteCount = (resultsLen-resultsLimit);
+                if (deleteCount % 2 != 0) {
+                    deleteCount++;
+                }
+                let objId;
+                let objIndex;
+                if ( deletionIds.length < (deleteCount/2) ) {
+                    objIndex = i;
+                }
+                else {
+                    objIndex = (resultsLen-(i-(deleteCount/2))-1);
+                }
+                context.messenger.message(`Setting record [${objIndex}] for deletion.`);
+                objId = results[objIndex]._id;
                 deletionIds.push(objId);
             }
             context.messenger.message(`Deleting ids: ${deletionIds}`);
+            context.messenger.message(`(Object count to delete: ${deletionIds.length})`);
             
             const deleteModel = characterModel;
             const deleteQuery = deleteModel.find( { _id: { $in: deletionIds } } );
