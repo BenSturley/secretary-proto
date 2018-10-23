@@ -35,8 +35,8 @@ const test_runner = async function(context) {
 
     //
     // create schema and model
-    const characterSchema = require('../characters/character-mongoose-schema').schema;
-    const characterModel = mongoose.model("Character", characterSchema);
+    // const characterSchema = require('../characters/character-mongoose-schema').schema;
+    // const characterModel = mongoose.model("Character", characterSchema);
     
     
 

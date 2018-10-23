@@ -277,7 +277,8 @@ const test_runner = async context => {
         context.messenger.error(`Error executing find: ${err}`);
     }
 
-    if (results) {
+    const _run_deletions = false;       // true;
+    if (_run_deletions && results) {
         const resultsLen = results.length;
         if ( resultsLen > 0 ) {
             context.messenger.message(`Object[0]: ${results[0]}`);
