@@ -19,7 +19,7 @@ const test_runner = context => {
         context.messenger.message('--{ NAME GENERATOR }--');
 
         const name_generator = require('./helpers/name-generator');
-        const names = name_generator.get_names();
+        const names = name_generator.get_names(10);
 
         context.messenger.message(' * generated names: * ');
         names.forEach(
