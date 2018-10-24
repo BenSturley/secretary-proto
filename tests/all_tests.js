@@ -43,22 +43,23 @@ const tests_runner = async () => {
     for (let i = 0; i < testFilePaths.length; i++) {
         const path = testFilePaths[i];
         //console.log(path);
-        if (path.toLowerCase().indexOf('mongoose') > -1 
-         || path.toLowerCase().indexOf('crud') > -1 
+        if (    path.toLowerCase().indexOf('sandbox') > -1 
+            ||  path.toLowerCase().indexOf('xmongoose') > -1 
+            ||  path.toLowerCase().indexOf('xcrud') > -1 
             ) {
-            const test = require(path);
-            context.reset();
-            if (test.async) {
-                //(async () => {
-                    console.log(' * running async test * ');
-                    await test.run_test(context);
-                    console.log(' * finished async test * ');
-                //})();
+                const test = require(path);
+                context.reset();
+                if (test.async) {
+                    //(async () => {
+                        console.log(' * running async test * ');
+                        await test.run_test(context);
+                        console.log(' * finished async test * ');
+                    //})();
+                }
+                else {
+                    test.run_test(context);
+                }
             }
-            else {
-                test.run_test(context);
-            }
-        }
     } // for (let i = 0; i < testFilePaths.length; i++) {
     console.log('-- Tests completed --');
 

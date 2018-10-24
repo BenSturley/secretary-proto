@@ -37,7 +37,7 @@ const test_runner = async context => {
     //     );
     }
 
-    context.messenger.message('-- Running connect tests... --');
+    context.messenger.message('--{ Running connect tests... }--');
     try {
         await mongoose.connect(uri, { useNewUrlParser: true });
         context.messenger.message('Connected to database successfully.');
@@ -49,7 +49,7 @@ const test_runner = async context => {
 
     //
     // schema tests
-    context.messenger.message('-- Running schema tests... --');
+    context.messenger.message('--{ Running schema tests... }--');
     
     context.messenger.message('Creating character object...');
     const Character = require('../characters/character');
@@ -76,7 +76,7 @@ const test_runner = async context => {
     // store ref to schema for model
     const characterSchema = schema;
 
-    context.messenger.message('- Comparing schemas... -');
+    context.messenger.message('-[ Comparing schemas... ]-');
     
     context.messenger.message(schema);
     context.messenger.message(schema2);
@@ -185,7 +185,7 @@ const test_runner = async context => {
 
     //
     // model tests
-    context.messenger.message("-- Running model tests... --");
+    context.messenger.message("--{ Running model tests... }--");
 
     const characterModel = mongoose.model('Character', characterSchema);
     context.messenger.message('characterModel:');
@@ -291,7 +291,7 @@ const test_runner = async context => {
             context.messenger.message(`Excessive record count: ${resultsLen}; trimming...`);
 
             // delete tests
-            context.messenger.message('-- Running delete tests... --');
+            context.messenger.message('--{ Running delete tests... }--');
 
             // create list of IDs to delete (all but last 10 returned)
             const deletionIds = [];

@@ -3,6 +3,8 @@
 //
 const test_runner = async function(context) {
 
+    //
+    // init contextual info
     context.currentTest = 'CRUD Tests - Simple';
     context.isStarted = true;
     context.messenger.message('--- Starting Mongoose Simple CRUD tests ---');
@@ -12,7 +14,7 @@ const test_runner = async function(context) {
     
     //
     // connect
-    context.messenger.message('-- Running connect tests... --');
+    context.messenger.message('--{ Running connect tests... }--');
     try {
         context.messenger.message('Connecting...');
         await mongoose.connect(uri, { useNewUrlParser: true });
