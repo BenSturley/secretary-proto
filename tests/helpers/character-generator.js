@@ -18,7 +18,7 @@ const generator = num_characters => {
     // build character objects array
     const Character = require('../../characters/character');
     const characters = [];
-    for (let i = 0; i < num_characters; i++) {
+    for ( let i = 0; i < num_characters; i++ ) {
         const name = names[i];
         const chr = new Character( 
                 { 

@@ -3,8 +3,10 @@
 // 
 const test_runner = context => {
 
-    const RUN_name_generator        = true;
-    const RUN_character_generator   = false;
+    const RUN_name_generator        = false;
+    const RUN_character_generator   = true;
+    const RUN_names_count           = 10;
+    const RUN_characters_count      = 10;
 
 
     //
@@ -19,7 +21,7 @@ const test_runner = context => {
         context.messenger.message('--{ NAME GENERATOR }--');
 
         const name_generator = require('./helpers/name-generator');
-        const names = name_generator.get_names(10);
+        const names = name_generator.get_names(RUN_names_count);
 
         context.messenger.message(' * generated names: * ');
         names.forEach(
@@ -27,7 +29,7 @@ const test_runner = context => {
                     context.messenger.message(name);
                 }
             );
-    }
+        }
 
     //
     // character generator
@@ -35,15 +37,15 @@ const test_runner = context => {
         context.messenger.message('--{ CHARACTER GENERATOR }--');
 
         const chr_generator = require('./helpers/character-generator');
-        const characters = chr_generator.get_characters();
+        const characters = chr_generator.get_characters(RUN_characters_count);
         
         context.messenger.message(' * generated characters: * ');
         characters.forEach(
                 chr => {
-                    context.messenger.message(chr);
+                    context.messenger.message(chr.getNames());
                 }
             );
-    }
+        }
     
     //
     // all done
